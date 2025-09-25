@@ -19,6 +19,9 @@ int main(void) {
     Mover mover; // create mover object that contains time and position to move
     InitMover( &mover, circle.position,  (Vector2){400, 400},  1.0f);
 
+    Inflater inflater;
+    InitInflater(&inflater, circle.radius, 100.0f, 1.0f);
+
 
 
 	// Game loop
@@ -26,7 +29,52 @@ int main(void) {
 		float deltaTime = GetFrameTime();
 
 		// Update
-		// if (IsKeyPressed(KEY_SPACE)) {
+		if (IsKeyPressed(KEY_I)) {
+            inflater.start_radius = circle.radius;
+            inflater.end_radius = circle.radius * 2;
+            inflater.transitionTime = 0.0f;
+            inflater.isInflating = true;
+        }
+
+        if (inflater.isInflating) {
+            inflater.transitionTime += deltaTime;
+
+            if (inflater.transitionTime >= inflater.duration) {
+                circle.radius = inflater.end_radius;
+                inflater.isInflating = false;
+            } else {
+                circle.radius = EaseOutQuad(inflater.transitionTime, inflater.start_radius, inflater.end_radius - inflater.start_radius, inflater.duration);
+            }
+        }
+
+        if (IsKeyPressed(KEY_D)) {
+            inflater.start_radius = circle.radius;
+
+            if (circle.radius > 1 ) {
+                inflater.end_radius = circle.radius / 2;
+            } else {
+                inflater.end_radius = 1.0f;
+            }
+            
+            inflater.transitionTime = 0.0f;
+            inflater.isInflating = true;
+        }
+
+        if (inflater.isInflating) {
+            inflater.transitionTime += deltaTime;
+
+            if (inflater.transitionTime >= inflater.duration) {
+                circle.radius = inflater.end_radius;
+                inflater.isInflating = false;
+            } else {
+                circle.radius = EaseOutQuad(inflater.transitionTime, inflater.start_radius, inflater.end_radius - inflater.start_radius, inflater.duration);
+            }
+        }
+
+
+
+
+
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
             mover.start = circle.position;
             mover.end = GetMousePosition();

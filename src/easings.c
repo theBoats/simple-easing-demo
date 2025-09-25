@@ -16,3 +16,12 @@ void InitMover(Mover* mover, Vector2 start, Vector2 end, float duration) {
     mover->isMoving = false;
     mover->transitionTime = 0.0f;   
 }
+
+void InitInflater(Inflater* inflater, float start_radius, float end_radius, float duration) {
+    inflater->start_radius = start_radius;
+    inflater->end_radius = end_radius;
+    inflater->start_time = GetTime();
+    inflater->duration = duration;
+    inflater->isInflating = false;
+    inflater->transitionTime = 0.0f;
+}
