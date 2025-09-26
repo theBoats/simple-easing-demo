@@ -6,7 +6,7 @@
 typedef struct Mover {
     Vector2 start;
     Vector2 end;
-    float start_time;
+    // float start_time;
     float duration;
     bool isMoving;
     float transitionTime;
@@ -16,7 +16,7 @@ typedef struct Mover {
 typedef struct Inflater {
     float start_radius;
     float end_radius;
-    float start_time;
+    // float start_time;
     float duration;
     bool isInflating;
     float transitionTime;

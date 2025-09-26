@@ -26,9 +26,11 @@ int main(void) {
 
 	// Game loop
 	while(!WindowShouldClose()) {
-		float deltaTime = GetFrameTime();
+		float deltaTime = GetFrameTime(); // returns time in seconds of each frame
 
 		// Update
+
+        // Increase the circle size by 2
 		if (IsKeyPressed(KEY_I)) {
             inflater.start_radius = circle.radius;
             inflater.end_radius = circle.radius * 2;
@@ -47,6 +49,7 @@ int main(void) {
             }
         }
 
+        // Decrease the circle size by 2
         if (IsKeyPressed(KEY_D)) {
             inflater.start_radius = circle.radius;
 
@@ -71,10 +74,7 @@ int main(void) {
             }
         }
 
-
-
-
-
+        // Move the circle to the mouse position smoothly
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
             mover.start = circle.position;
             mover.end = GetMousePosition();
