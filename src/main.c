@@ -17,10 +17,10 @@ int main(void) {
     Circle circle = { .position = { 100, 100 }, .radius = 50, .color = RED };
     
     Mover mover; // create mover object that contains time and position to move
-    InitMover( &mover, circle.position,  (Vector2){400, 400},  1.0f);
+    InitMover( &mover, circle.position,  (Vector2){400, 400},  1.0f, EaseOutQuad);
 
     Inflater inflater;
-    InitInflater(&inflater, circle.radius, 100.0f, 1.0f);
+    InitInflater(&inflater, circle.radius, 100.0f, 1.0f, EaseOutQuad);
 
 
 
@@ -30,24 +30,15 @@ int main(void) {
 
 		// Update
 
+        // Check for input
+
         // Increase the circle size by 2
 		if (IsKeyPressed(KEY_I)) {
             inflater.start_radius = circle.radius;
             inflater.end_radius = circle.radius * 2;
             inflater.transitionTime = 0.0f;
             inflater.isInflating = true;
-        }
-
-        if (inflater.isInflating) {
-            inflater.transitionTime += deltaTime;
-
-            if (inflater.transitionTime >= inflater.duration) {
-                circle.radius = inflater.end_radius;
-                inflater.isInflating = false;
-            } else {
-                circle.radius = EaseOutQuad(inflater.transitionTime, inflater.start_radius, inflater.end_radius - inflater.start_radius, inflater.duration);
-            }
-        }
+        }     
 
         // Decrease the circle size by 2
         if (IsKeyPressed(KEY_D)) {
@@ -63,46 +54,22 @@ int main(void) {
             inflater.isInflating = true;
         }
 
-        if (inflater.isInflating) {
-            inflater.transitionTime += deltaTime;
-
-            if (inflater.transitionTime >= inflater.duration) {
-                circle.radius = inflater.end_radius;
-                inflater.isInflating = false;
-            } else {
-                circle.radius = EaseOutQuad(inflater.transitionTime, inflater.start_radius, inflater.end_radius - inflater.start_radius, inflater.duration);
-            }
-        }
-
-        // Move the circle to the mouse position smoothly
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            mover.isMoving = true;
             mover.start = circle.position;
             mover.end = GetMousePosition();
             mover.transitionTime = 0.0f;
-            mover.isMoving = true;
         }
 
+        // Update movers
         if (mover.isMoving) {
-            mover.transitionTime += deltaTime;
+            UpdateMover(&mover, &circle, deltaTime);
+        }
 
-            if (mover.transitionTime >= mover.duration) {
-                circle.position = mover.end;
-                mover.isMoving = false;
-            } else {
+        if (inflater.isInflating) {
+            UpdateInflater(&inflater, &circle, deltaTime);
+         }
 
-              /*
-              arguments:
-                t = current time
-                b = start value
-                c = change in value
-                d = duration
-              */
-
-                circle.position.x = EaseOutQuad(mover.transitionTime, mover.start.x, mover.end.x - mover.start.x, mover.duration);
-                circle.position.y = EaseOutQuad(mover.transitionTime, mover.start.y, mover.end.y - mover.start.y, mover.duration);
-
-            }
-        }   
 
 		// Draw
 		BeginDrawing();
